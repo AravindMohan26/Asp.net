@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using samp;
+public partial class _Default : System.Web.UI.Page
+{
+    logic obj = new logic();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        DataSet ds1 = obj.getDataSet("select * from books");
+        GridView2.DataSource = ds1;
+        GridView2.DataBind();
+        txtbname.Focus();
+    }
+
+
+    protected void btnbname_Click(object sender, EventArgs e)
+    {
+        obj.checkdataexist("select * from books where Bname like '%" + txtbname.Text + "%'");
+        bool a = obj.checkdataexist("select * from books where Bname like '%"+txtbname.Text+"%'");
+
+        if(a)
+        {
+            GridView2.Visible = false;
+            DataSet ds = obj.getDataSet("select * from books where Bname like '%" + txtbname.Text + "%'");
+            GridView1.DataSource = ds;
+            GridView1.DataBind();
+            lblerror.Visible = false;
+            GridView1.Visible = true;
+        }
+        else
+        {
+            GridView2.Visible = false;
+            GridView1.Visible = false;
+            lblerror.Visible = true;
+            lblerror.Text = "No Result Found";
+        }
+    }
+
+
+    protected void LinkButton2_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("issuebook.aspx");
+    }
+}
